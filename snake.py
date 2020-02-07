@@ -4,29 +4,29 @@ from pygame.locals import *
 def on_grid_random():
     x = random.randint(0,590)           
     y = random.randint(0,590)
-    return (x//10 * 10, y//10 * 10)        #gera posições aleatórias para a maçã, mas em apenas múltiplos de 10(para ficar alinhado com a snake)
+    return (x//10 * 10, y//10 * 10)        #generates random positions for the apple, but only in multiples of 10 (to be aligned with the snake)
 
 def collision(c1, c2):
-    return (c1[0] == c2[0]) and (c1[1] == c2[1])  #colisão snake e maçã
+    return (c1[0] == c2[0]) and (c1[1] == c2[1])  #snake and apple collision
 
 UP = 0
 RIGHT = 1
-DOWN = 2               #direções dos movimentos
+DOWN = 2               #movement directions
 LEFT = 3
 
 pygame.init()
-screen = pygame.display.set_mode((600,600))       #cria uma tela para o jogo (tupla)
+screen = pygame.display.set_mode((600,600))       #creates a window for the game (tuple)
 pygame.display.set_caption('Snake')
 
-snake = [(200, 200), (210, 200), (220,200)]     #cria snake
-snake_skin = pygame.Surface((10,10))      #define tamanho dos pixels
-snake_skin.fill((255,255,255))        # cor da snake
+snake = [(200, 200), (210, 200), (220,200)]     #creates snake
+snake_skin = pygame.Surface((10,10))      #define pixel size
+snake_skin.fill((255,255,255))        #snake color
 
 apple_pos = on_grid_random()      
-apple = pygame.Surface((10,10))        #tamanho dos pixels
-apple.fill((255,0,0))                # cor da maçã
+apple = pygame.Surface((10,10))        #pixel size
+apple.fill((255,0,0))                #apple color
 
-my_direction = LEFT                    #inicia a snake pela esquerda
+my_direction = LEFT                    #start the snake from the left
 
 clock = pygame.time.Clock()
 
@@ -34,26 +34,26 @@ font = pygame.font.Font('freesansbold.ttf',18)
 score = 0
 
 game_over = False
-while not game_over:                            #laço infinito do jogo
-    clock.tick(10)                #limita a velocidade da snake
-    for event in pygame.event.get():      #pega tudo oq o usuário faz
+while not game_over:                            #infinite loop of the game
+    clock.tick(10)                #limits the speed of the snake
+    for event in pygame.event.get():      #takes everything the user does
         if event.type == QUIT:          
-            pygame.quit()             #evento de fechar jogo
+            pygame.quit()             #close game event
             exit()
             
         if event.type == KEYDOWN:
             if event.key == K_UP:
                 my_direction = UP
             if event.key == K_DOWN:
-                my_direction = DOWN        #teclas do teclado movimenta snake 
+                my_direction = DOWN        #keyboard keys move snake
             if event.key == K_LEFT:        
                 my_direction = LEFT
             if event.key == K_RIGHT:
                 my_direction = RIGHT
 
     if collision(snake[0], apple_pos):
-        apple_pos = on_grid_random()    #gera uma nova posição para maçã
-        snake.append((0,0))                 #aumenta a snake
+        apple_pos = on_grid_random()    #generates a new position for apple
+        snake.append((0,0))                 #the snake grows
         score = score + 1
 
     if snake[0][0] == 600 or snake[0][1] == 600 or snake[0][0] < 0 or snake[0][1] < 0:
@@ -68,20 +68,20 @@ while not game_over:                            #laço infinito do jogo
     if game_over:
         break
     
-    for i in range(len(snake) - 1, 0, -1):              #consolida o movimento mexendo com o rabo
+    for i in range(len(snake) - 1, 0, -1):              #consolidates the movement with the tail
         snake[i] = (snake[i-1][0], snake[i-1][1])
 
     if my_direction == UP:
         snake[0] = (snake[0][0], snake[0][1] - 10)      
     if my_direction == DOWN:
         snake[0] = (snake[0][0], snake[0][1] + 10)
-    if my_direction == RIGHT:                             #da funcionalidade aos movimentos mudando posição da cabeça
+    if my_direction == RIGHT:                             #gives functionality to movements by changing head position
         snake[0] = (snake[0][0] + 10, snake[0][1])
     if my_direction == LEFT:
         snake[0] = (snake[0][0] - 10, snake[0][1])
 
-    screen.fill((0,0,0))                # limpa a tela antes do jogo
-    screen.blit(apple, apple_pos)          #plota a maçã
+    screen.fill((0,0,0))                #clears the screen before the game
+    screen.blit(apple, apple_pos)          #plot the apple
 
     for x in range(0, 600, 10): # Draw vertical lines
         pygame.draw.line(screen, (40, 40, 40), (x, 0), (x, 600))
@@ -94,9 +94,9 @@ while not game_over:                            #laço infinito do jogo
     screen.blit(score_font, score_rect)
     
     for pos in snake:                      
-        screen.blit(snake_skin,pos)     #plota a snake
+        screen.blit(snake_skin,pos)     #plot the snake
 
-    pygame.display.update()           #tela fica atualizando sempre
+    pygame.display.update()           #screen keeps updating
 
 while True:
     game_over_font = pygame.font.Font('freesansbold.ttf', 75)
@@ -111,4 +111,3 @@ while True:
             if event.type == QUIT:
                 pygame.quit()
                 exit()
-
